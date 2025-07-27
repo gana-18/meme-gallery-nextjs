@@ -13,22 +13,13 @@ pnpm dev
 # or
 bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
+<h3>Project Outline: </h3>
+<ul>
+<li>Features of this meme gallery include infinite scrolling for every 100 memes, gallery, zoom in and out.</li>
+<li>The typical nextjs feature loading.jsx is used and since there are no routes/dynamic routes for it to apply automatically it is used in the if/else condition as a component.</li>
+<li>Lazy loading is used for gifs and priority is set to true for videos as they take maximum time while fetching.</li>
+<li>The website is responsive.</li>
+</ul>
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

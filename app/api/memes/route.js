@@ -1,43 +1,57 @@
 export const dynamic = 'force-dynamic'; // disables static caching
 
-export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const after = searchParams.get("after");
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
   const subreddit = searchParams.get("subreddit") || "memes";
 
-  const url = `https://www.reddit.com/r/${subreddit}.json?limit=100${after ? `&after=${after}` : ''}`;
-
   try {
-    console.log("Fetching Reddit URL:", url);
-    const res = await fetch(url, {
+    // 1. Get Reddit access token
+    const authString = Buffer.from(
+      `${process.env.REDDIT_CLIENT_ID}:${process.env.REDDIT_CLIENT_SECRET}`
+    ).toString("base64");
+
+    const tokenRes = await fetch("https://www.reddit.com/api/v1/access_token", {
+      method: "POST",
       headers: {
-        'User-Agent': 'Mozilla/5.0',
+        Authorization: `Basic ${authString}`,
+        "Content-Type": "application/x-www-form-urlencoded",
       },
+      body: "grant_type=client_credentials",
     });
 
-    if (!res.ok) {
-      console.error("Reddit fetch failed with status:", res.status);
-      return new Response(JSON.stringify({ error: "Failed to fetch from Reddit" }), { status: 500 });
+    const tokenData = await tokenRes.json();
+
+    if (!tokenRes.ok) {
+      return new Response(
+        JSON.stringify({ error: "Failed to get access token", details: tokenData }),
+        { status: 500 }
+      );
     }
 
-    const json = await res.json();
-    if (!json?.data?.children) {
-      return new Response(JSON.stringify({ error: "Invalid Reddit response" }), { status: 502 });
-    }
+    const accessToken = tokenData.access_token;
 
-    return new Response(JSON.stringify({
-      children: json.data.children,
-      after: json.data.after
-    }), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json"
+    // 2. Fetch subreddit data using token
+    const redditRes = await fetch(
+      `https://oauth.reddit.com/r/${subreddit}.json?limit=100`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "User-Agent": process.env.REDDIT_USER_AGENT || "MyRedditApp/1.0",
+        },
       }
-    });
-  } catch (err) {
-    console.error("API error:", err);
-    return new Response(JSON.stringify({ error: err.message || "Unknown error" }), {
-      status: 500
-    });
+    );
+
+    if (!redditRes.ok) {
+      return new Response(
+        JSON.stringify({ error: "Failed to fetch subreddit", status: redditRes.status }),
+        { status: 500 }
+      );
+    }
+
+    const data = await redditRes.json();
+    return new Response(JSON.stringify(data), { status: 200 });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
+

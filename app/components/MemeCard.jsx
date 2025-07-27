@@ -17,8 +17,8 @@ function MemeCard() {
         try {
             const response = await fetch(`/api/memes?subreddit=${subreddit}${after ? `&after=${after}` : ''}`);
             const json = await response.json();
-            setMemes((prevMemes) => [...prevMemes, ...json.children]);
-            setAfter(json.after);
+            setMemes((prevMemes) => [...prevMemes, ...json.data.children]);
+            setAfter(json.data.after);
             setLoading(false);
         } catch (error) {
             setError('Failed to fetch memes. Please try again later.');
@@ -117,7 +117,7 @@ function MemeCard() {
           </div>
           {after && (
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                Loading more memes🚀...
+                Loading more memes🚀...but dude you need to sleep☠️☠️
             </div>
           )}
      </Gallery></>)

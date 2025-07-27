@@ -75,7 +75,7 @@ function MemeCard() {
 
       <Gallery>
           <div className='items'>
-          {memes.map((meme)=>(
+          {Array.isArray(memes) && memes.map((meme) => (
                <Item
                    original={meme.data.is_video ? meme.data.secure_media?.reddit_video?.fallback_url : meme.data.url}
                    thumbnail={meme.data.thumbnail === "nsfw" ? meme.data.url : meme.data.thumbnail}

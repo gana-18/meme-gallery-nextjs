@@ -6,8 +6,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Meme Gallery",
-  description: "Explore memes at one go",
-  keywords:'Memes, meme gallery, doge, reddit, reddit memes'
+  description: "Explore memes from reddit at one go",
+  keywords:'Memes, meme gallery, doge, reddit, reddit memes, reddit top memes, top memes, reddit meme gallery, meme gallery, meme collection, meme feed, meme browser',
 };
 export const revalidate = 3600 // revalidate at most every hour
 
